@@ -15,18 +15,34 @@ export default function AdminDashboard() {
         if(Array.isArray(data)) setProdutos(data)
       })
 
-    // Forçar remoção da badge do Netlify via JavaScript
+    // Forçar remoção absoluta da badge do Netlify via JavaScript
     const killNetlifyBadge = () => {
-      document.querySelectorAll('[id*="netlify"], [class*="netlify"], a[href*="netlify.com"]').forEach(el => {
-        if (el.innerHTML.includes('Powered by') || el.tagName === 'NETLIFY-TOOLBAR-WIDGET') {
-          el.remove()
+      // 1. Tentar definir o estado na memória do navegador para esconder nativamente
+      try {
+        localStorage.setItem('netlify-drawer-state', 'hidden');
+        sessionStorage.setItem('netlify-drawer-state', 'hidden');
+        localStorage.setItem('ntl-drawer-state', 'hidden');
+      } catch (e) {}
+
+      // 2. Varrer todos os elementos filhos do body
+      const elements = document.body.children;
+      for (let i = 0; i < elements.length; i++) {
+        const el = elements[i] as HTMLElement;
+        const tag = el.tagName.toLowerCase();
+        // Se for um elemento injetado do Netlify (netlify-drawer, netlify-toolbar, etc)
+        if (tag.includes('netlify') || tag.includes('stackbit') || el.id.includes('netlify') || el.className.includes('netlify')) {
+          el.remove();
         }
-      })
+        // Se contiver o texto "Powered by Netlify"
+        if (el.innerHTML && el.innerHTML.includes('Powered by Netlify') && tag !== 'script' && tag !== 'main' && tag !== 'div') {
+          el.remove();
+        }
+      }
     }
     
     killNetlifyBadge()
     const observer = new MutationObserver(killNetlifyBadge)
-    observer.observe(document.body, { childList: true, subtree: true })
+    observer.observe(document.documentElement, { childList: true, subtree: true })
     
     return () => observer.disconnect()
   }, [])
