@@ -103,6 +103,7 @@ export default function AdminDashboard() {
                         <button onClick={() => handleEdit(produto)} className="text-blue-600 font-semibold px-4 py-1.5 border border-blue-600 rounded hover:bg-blue-50 transition cursor-pointer z-10 relative">Editar</button>
                         <button onClick={async () => {
                           if (confirm('Deletar produto?')) {
+                            await fetch(`/api/produtos?id=${produto.id}`, { method: 'DELETE' })
                             setProdutos(produtos.filter(p => p.id !== produto.id))
                           }
                         }} className="text-red-600 font-semibold px-4 py-1.5 border border-red-600 rounded hover:bg-red-50 transition cursor-pointer z-10 relative">Excluir</button>

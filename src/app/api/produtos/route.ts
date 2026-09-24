@@ -62,3 +62,17 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: 'Erro ao atualizar produto' }, { status: 500 })
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    
+    if (!id) return NextResponse.json({ error: 'ID is required' }, { status: 400 })
+    
+    await prisma.product.delete({ where: { id } })
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    return NextResponse.json({ error: 'Erro ao excluir produto' }, { status: 500 })
+  }
+}
