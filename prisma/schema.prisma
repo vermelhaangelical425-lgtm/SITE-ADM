@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String
+  order    Int       @default(0)
+  products Product[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  image       String?
+  available   Boolean  @default(true)
+  order       Int      @default(0)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+}
+
+model Setting {
+  id             String  @id @default("1")
+  storeName      String  @default("Lanchonete da Sônia")
+  whatsappNumber String  @default("5511999999999")
+  pixKey         String  @default("chave-pix@email.com")
+  pixName        String  @default("Sônia")
+  isOpen         Boolean @default(true)
+  bannerImage    String?
+  logoImage      String?
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  customerName  String
+  customerPhone String
+  notes         String?
+  paymentMethod String // PIX, DINHEIRO
+  changeFor     Float? // Troco para (se for dinheiro)
+  totalAmount   Float
+  status        String      @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+  createdAt     DateTime    @default(now())
+  items         OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String
+  name      String
+  price     Float
+  quantity  Int
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
