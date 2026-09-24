@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const data = await request.json()
-    const { id, price, name, description, image } = data
+    const { id, price, name, description, image, available } = data
     
     // Only update fields that are provided
     const updateData: any = {}
@@ -52,6 +52,7 @@ export async function PUT(request: Request) {
     if (name !== undefined) updateData.name = name
     if (description !== undefined) updateData.description = description
     if (image !== undefined) updateData.image = image
+    if (available !== undefined) updateData.available = available
 
     const product = await prisma.product.update({
       where: { id },

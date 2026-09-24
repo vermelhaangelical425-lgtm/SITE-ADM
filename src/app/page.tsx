@@ -140,6 +140,20 @@ export default function AdminDashboard() {
                         <span className="text-green-600 font-bold">R$ {produto.price?.toFixed(2).replace('.', ',')}</span>
                       </td>
                       <td className="p-4 flex gap-2 items-center h-full pt-8">
+                        <button 
+                          onClick={async () => {
+                            const newStatus = !produto.available;
+                            await fetch('/api/produtos', {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ id: produto.id, available: newStatus })
+                            });
+                            setProdutos(produtos.map(p => p.id === produto.id ? { ...p, available: newStatus } : p));
+                          }} 
+                          className={`font-semibold px-4 py-1.5 border rounded transition cursor-pointer z-10 relative ${produto.available ? 'text-green-600 border-green-600 hover:bg-green-50' : 'text-gray-500 border-gray-500 hover:bg-gray-50 bg-gray-100'}`}
+                        >
+                          {produto.available ? '✅ Disponível' : '❌ Acabou'}
+                        </button>
                         <button onClick={() => handleEdit(produto)} className="text-blue-600 font-semibold px-4 py-1.5 border border-blue-600 rounded hover:bg-blue-50 transition cursor-pointer z-10 relative">Editar</button>
                         <button onClick={async () => {
                           if (confirm('Deletar produto?')) {
