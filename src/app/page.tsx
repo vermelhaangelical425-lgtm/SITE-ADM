@@ -14,6 +14,21 @@ export default function AdminDashboard() {
       .then(data => {
         if(Array.isArray(data)) setProdutos(data)
       })
+
+    // Forçar remoção da badge do Netlify via JavaScript
+    const killNetlifyBadge = () => {
+      document.querySelectorAll('[id*="netlify"], [class*="netlify"], a[href*="netlify.com"]').forEach(el => {
+        if (el.innerHTML.includes('Powered by') || el.tagName === 'NETLIFY-TOOLBAR-WIDGET') {
+          el.remove()
+        }
+      })
+    }
+    
+    killNetlifyBadge()
+    const observer = new MutationObserver(killNetlifyBadge)
+    observer.observe(document.body, { childList: true, subtree: true })
+    
+    return () => observer.disconnect()
   }, [])
 
   const handleEdit = (produto: any) => {
