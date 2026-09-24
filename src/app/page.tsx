@@ -92,7 +92,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-100 flex font-sans text-gray-900 relative">
       {/* Sidebar */}
       <aside className="w-64 bg-gray-900 text-white min-h-screen p-4 flex flex-col">
-        <h2 className="text-xl font-bold mb-8 flex items-center gap-2">⚙️ Painel da Sônia</h2>
+        <h2 className="text-xl font-bold mb-8 flex items-center gap-2">⚙️ Sabor Gourmet</h2>
         <nav className="flex flex-col gap-2">
           <button onClick={() => setActiveTab('produtos')} className={`p-3 rounded text-left font-semibold ${activeTab === 'produtos' ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 text-gray-300'}`}>🍔 Produtos</button>
           <button onClick={() => setActiveTab('config')} className={`p-3 rounded text-left font-semibold ${activeTab === 'config' ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 text-gray-300'}`}>💲 Configurações (PIX)</button>
