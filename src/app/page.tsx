@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('produtos')
   const [produtos, setProdutos] = useState<any[]>([])
-  const [settings, setSettings] = useState<any>({ pixKey: '', isOpen: true, closedMessage: '' })
+  const [settings, setSettings] = useState<any>({ pixKey: '', isOpen: true, closedMessage: '', whatsappNumber: '' })
   const [editingProduct, setEditingProduct] = useState<any | null>(null)
   
   useEffect(() => {
@@ -240,14 +240,28 @@ export default function AdminDashboard() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Pagamento</h3>
-                <label className="block text-gray-700 font-bold mb-2">Chave PIX (E-mail, CPF, Telefone)</label>
-                <input 
-                  type="text" 
-                  value={settings.pixKey || ''}
-                  onChange={(e) => setSettings({...settings, pixKey: e.target.value})}
-                  className="w-full border rounded p-2 text-gray-800"
-                />
+                <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Pagamento e Contato</h3>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-bold mb-2">WhatsApp para receber os pedidos (Somente números)</label>
+                  <input 
+                    type="text" 
+                    value={settings.whatsappNumber || ''}
+                    onChange={(e) => setSettings({...settings, whatsappNumber: e.target.value})}
+                    className="w-full border rounded p-2 text-gray-800"
+                    placeholder="Ex: 5598985298290"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-bold mb-2">Chave PIX (E-mail, CPF, Telefone)</label>
+                  <input 
+                    type="text" 
+                    value={settings.pixKey || ''}
+                    onChange={(e) => setSettings({...settings, pixKey: e.target.value})}
+                    className="w-full border rounded p-2 text-gray-800"
+                  />
+                </div>
               </div>
 
               <button 
