@@ -40,6 +40,7 @@ model Setting {
   pixKey         String  @default("chave-pix@email.com")
   pixName        String  @default("Sônia")
   isOpen         Boolean @default(true)
+  closedMessage  String?
   bannerImage    String?
   logoImage      String?
 }

@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('produtos')
   const [produtos, setProdutos] = useState<any[]>([])
-  const [pix, setPix] = useState('Soniasouzas1509@gmail.com')
+  const [settings, setSettings] = useState<any>({ pixKey: '', isOpen: true, closedMessage: '' })
   const [editingProduct, setEditingProduct] = useState<any | null>(null)
   
   useEffect(() => {
@@ -13,6 +13,12 @@ export default function AdminDashboard() {
       .then(res => res.json())
       .then(data => {
         if(Array.isArray(data)) setProdutos(data)
+      })
+
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if(data) setSettings(data)
       })
 
     // Forçar remoção absoluta da badge do Netlify via JavaScript
@@ -188,18 +194,60 @@ export default function AdminDashboard() {
             <header className="mb-8">
               <h1 className="text-3xl font-bold text-gray-800">Configurações da Loja</h1>
             </header>
-            <div className="bg-white rounded-lg shadow p-6 max-w-lg">
-              <div className="mb-6">
+            <div className="bg-white rounded-lg shadow p-6 max-w-lg space-y-6">
+              
+              <div>
+                <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Status de Funcionamento</h3>
+                <div className="flex items-center gap-4 mb-4">
+                  <button 
+                    onClick={() => setSettings({...settings, isOpen: true})}
+                    className={`flex-1 py-2 rounded font-bold ${settings.isOpen ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+                  >
+                    Funcionando
+                  </button>
+                  <button 
+                    onClick={() => setSettings({...settings, isOpen: false})}
+                    className={`flex-1 py-2 rounded font-bold ${!settings.isOpen ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+                  >
+                    Encerrado
+                  </button>
+                </div>
+                {!settings.isOpen && (
+                  <div>
+                    <label className="block text-gray-700 font-bold mb-2">Mensagem de aviso (Ex: Voltaremos amanhã às 18h)</label>
+                    <textarea 
+                      value={settings.closedMessage || ''}
+                      onChange={(e) => setSettings({...settings, closedMessage: e.target.value})}
+                      className="w-full border rounded p-2 text-gray-800 h-24"
+                      placeholder="O que o cliente vai ver quando o site estiver fechado?"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Pagamento</h3>
                 <label className="block text-gray-700 font-bold mb-2">Chave PIX (E-mail, CPF, Telefone)</label>
                 <input 
                   type="text" 
-                  value={pix}
-                  onChange={(e) => setPix(e.target.value)}
+                  value={settings.pixKey || ''}
+                  onChange={(e) => setSettings({...settings, pixKey: e.target.value})}
                   className="w-full border rounded p-2 text-gray-800"
                 />
               </div>
-              <button onClick={() => alert('Chave PIX atualizada no sistema!')} className="bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
-                Salvar Configurações
+
+              <button 
+                onClick={async () => {
+                  await fetch('/api/settings', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                  })
+                  alert('Configurações atualizadas no sistema!')
+                }} 
+                className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded hover:bg-blue-700 transition"
+              >
+                Salvar Alterações
               </button>
             </div>
           </>
